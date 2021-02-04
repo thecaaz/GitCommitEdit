@@ -18,6 +18,17 @@ namespace GitEdit.ViewModels
             }
         }
 
+        private Branch activeBranch;
+        public Branch ActiveBranch
+        {
+            get { return activeBranch; }
+            set
+            {
+                activeBranch = value;
+                RaisePropertyChangedEvent(nameof(ActiveBranch));
+            }
+        }
+
         public MainViewModel()
         {
             var repoPath = @"D:\Users\oarth\Documents\GitHub\GitEdit";
@@ -29,6 +40,7 @@ namespace GitEdit.ViewModels
                 var branches = repo.Branches;
                 foreach (var b in branches)
                 {
+                    ActiveBranch = b;
                     AppendLine(b.FriendlyName);
 
                     foreach (var commit in b.Commits)
