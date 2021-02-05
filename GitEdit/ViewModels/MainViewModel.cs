@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
@@ -45,6 +46,20 @@ namespace GitEdit.ViewModels
         }
         private ObservableCollection<string> branches = new ObservableCollection<string>();
 
+        public ObservableCollection<string> Commits
+        {
+            get
+            {
+                return commits;
+            }
+            set
+            {
+                commits = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        private ObservableCollection<string> commits = new ObservableCollection<string>();
+
         private string? activeBranch;
         public string? ActiveBranch
         {
@@ -53,6 +68,21 @@ namespace GitEdit.ViewModels
             {
                 activeBranch = value;
                 OnNotifyPropertyChanged();
+
+                using (gitRepo)
+                {
+                    if (gitRepo != null)
+                    {
+                        var branch = gitRepo.Branches.First(x => x.FriendlyName == activeBranch);
+
+                        Commits.Clear();
+
+                        foreach (var commit in branch.Commits)
+                        {
+                            Commits.Add(commit.Message);
+                        }
+                    }
+                }
             }
         }
 
@@ -115,6 +145,7 @@ namespace GitEdit.ViewModels
             using (var repo = new Repository(GitPath))
             {
                 Branches.Clear();
+                Commits.Clear();
 
                 foreach (var branch in repo.Branches)
                 {

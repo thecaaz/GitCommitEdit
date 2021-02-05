@@ -88,7 +88,16 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" Margin="10 0 0 0"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Commits" />
-                    <TextBlock Grid.Row="1" Text="{Binding ActiveBranch}"></TextBlock>
+
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Commits}" SelectedItem="{Binding ActiveBranch}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Grid>
             </materialDesign:Card>
         </Grid>
