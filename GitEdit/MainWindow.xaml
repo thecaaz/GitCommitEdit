@@ -10,28 +10,51 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
+        TextElement.FontSize="14"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-    
+
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        
-        <materialDesign:Card Grid.Row="0" Padding="10" Margin="10">
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" 
+                     Margin="10 10 0 0"
+                     materialDesign:HintAssist.Hint="Git Directory"
+                     x:Name="DirectoryTextBox"
+                     Text="{Binding GitPath}"
+                     materialDesign:TransitionAssist.DisableTransitions="True" />
+
+            <Button Grid.Column="1"
+                    Command="{Binding SelectDirectoryCommand}"
+                    Width="30"
+                    Height="30"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+                    ToolTip="MaterialDesignFloatingActionMiniLightButton">
+                    <materialDesign:PackIcon Kind="Folder" />
+            </Button>
+
+        </Grid>
+
+
+        <materialDesign:Card Grid.Row="1" Padding="10" Margin="10">
             <TextBlock Style="{DynamicResource MaterialDesignTextBlock}" Grid.Row="0" Text="{Binding Output}" x:Name="textBlock" TextWrapping="Wrap"/>
         </materialDesign:Card>
-        
-        <materialDesign:Card Grid.Row="1" Padding="10" Margin="10">
-            <TextBlock Style="{DynamicResource MaterialDesignTextBlock}" Grid.Row="0" Text="{Binding ActiveBranch.FriendlyName, Mode=OneWay}" x:Name="textBlock1" TextWrapping="Wrap"/>
-        </materialDesign:Card>
-        
+
     </Grid>
+
 </Window>
