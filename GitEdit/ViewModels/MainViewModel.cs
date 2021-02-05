@@ -2,6 +2,7 @@
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Windows.Input;
@@ -17,48 +18,65 @@ namespace GitEdit.ViewModels
             set
             {
                 gitPath = value;
-                RaisePropertyChangedEvent(nameof(GitPath));
+                OnNotifyPropertyChanged();
+
                 if (GitPathIsValid())
                 {
                     ChangeGitDirectory();
                 }
                 else
                 {
-                    Output = "Directory Path is not valid a valid git repository";
+                    Branches.Clear();
                 }
             }
         }
 
-        private string output = "";
-        public string Output
+        public ObservableCollection<string> Branches
         {
-            get { return output; }
+            get
+            {
+                return branches;
+            }
             set
             {
-                output = value;
-                RaisePropertyChangedEvent(nameof(Output));
+                branches = value;
+                OnNotifyPropertyChanged();
             }
         }
+        private ObservableCollection<string> branches = new ObservableCollection<string>();
 
-        private Branch? activeBranch;
-        public Branch? ActiveBranch
+        private string? activeBranch;
+        public string? ActiveBranch
         {
             get { return activeBranch; }
             set
             {
                 activeBranch = value;
-                RaisePropertyChangedEvent(nameof(ActiveBranch));
+                OnNotifyPropertyChanged();
             }
         }
 
-        public MainViewModel()
+        private Repository? gitRepo
         {
-            GitPath = @"D:\Users\oarth\Documents\GitHub\GitEdit";
+            get
+            {
+                if (GitPathIsValid())
+                {
+                    return new Repository(GitPath);
+                }
+                return null;
+            }
         }
 
         public ICommand SelectDirectoryCommand
         {
             get { return new DelegateCommand(SelectDirectory); }
+        }
+
+
+        public MainViewModel()
+        {
+            GitPath = @"D:\Users\oarth\Documents\GitHub\GitEdit";
         }
 
         private void SelectDirectory()
@@ -94,30 +112,22 @@ namespace GitEdit.ViewModels
 
         private void ChangeGitDirectory()
         {
-            Output = "";
-
             using (var repo = new Repository(GitPath))
             {
-                AppendLine("Branches");
-                AppendLine("-----------------");
-                var branches = repo.Branches;
-                foreach (var b in branches)
+                Branches.Clear();
+
+                foreach (var branch in repo.Branches)
                 {
-                    ActiveBranch = b;
-                    AppendLine(b.FriendlyName);
+                    Branches.Add(branch.FriendlyName);
                 }
-                AppendLine("-----------------");
+
+                RaisePropertyChangedEvent(nameof(Branches));
             }
         }
 
         private bool DirectoryPathIsValid()
         {
             return Directory.Exists(gitPath);
-        }
-
-        private void AppendLine(string content)
-        {
-            Output += content + Environment.NewLine;
         }
     }
 }

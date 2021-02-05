@@ -45,15 +45,53 @@
                     Height="30"
                     Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
                     ToolTip="MaterialDesignFloatingActionMiniLightButton">
-                    <materialDesign:PackIcon Kind="Folder" />
+                <materialDesign:PackIcon Kind="Folder" />
             </Button>
 
         </Grid>
 
+        <Grid Grid.Row="1">
 
-        <materialDesign:Card Grid.Row="1" Padding="10" Margin="10">
-            <TextBlock Style="{DynamicResource MaterialDesignTextBlock}" Grid.Row="0" Text="{Binding Output}" x:Name="textBlock" TextWrapping="Wrap"/>
-        </materialDesign:Card>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <materialDesign:Card Grid.Column="0" Grid.Row="1" Padding="10" Margin="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="10 0 0 0"
+                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                        Text="Branches" />
+
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Branches}" SelectedItem="{Binding ActiveBranch}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Grid.Column="1" Grid.Row="1" Padding="10" Margin="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="10 0 0 0"
+                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                        Text="Commits" />
+                    <TextBlock Grid.Row="1" Text="{Binding ActiveBranch}"></TextBlock>
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
 
     </Grid>
 

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GitEdit": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
