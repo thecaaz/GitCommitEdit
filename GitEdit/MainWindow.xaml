@@ -53,7 +53,7 @@
         <Grid Grid.Row="1">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="160"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
@@ -89,11 +89,11 @@
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Commits" />
 
-                    <ListBox Grid.Row="1" ItemsSource="{Binding Commits}" SelectedItem="{Binding ActiveCommit}">
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Commits}" SelectedItem="{Binding ActiveCommit}" MouseDoubleClick="CommitListView_MouseDoubleClick">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding}" />
+                                    <TextBlock Text="{Binding Message}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

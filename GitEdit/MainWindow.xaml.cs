@@ -1,4 +1,5 @@
-﻿using LibGit2Sharp;
+﻿using GitEdit.ViewModels;
+using LibGit2Sharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,18 @@ namespace GitEdit
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainViewModel mainViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            mainViewModel = (MainViewModel)DataContext;
+        }
+
+        private void CommitListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            mainViewModel.ChangeCommitCommand.Execute(sender);
         }
     }
 }

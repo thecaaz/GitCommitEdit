@@ -1,4 +1,5 @@
-﻿using LibGit2Sharp;
+﻿using GitEdit.Models;
+using LibGit2Sharp;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace GitEdit.ViewModels
         }
         private ObservableCollection<string> branches = new ObservableCollection<string>();
 
-        public ObservableCollection<string> Commits
+        public ObservableCollection<GitCommit> Commits
         {
             get
             {
@@ -58,7 +59,7 @@ namespace GitEdit.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
-        private ObservableCollection<string> commits = new ObservableCollection<string>();
+        private ObservableCollection<GitCommit> commits = new ObservableCollection<GitCommit>();
 
         private string? activeBranch;
         public string? ActiveBranch
@@ -79,15 +80,15 @@ namespace GitEdit.ViewModels
 
                         foreach (var commit in branch.Commits)
                         {
-                            Commits.Add(commit.Message);
+                            Commits.Add(new GitCommit(commit));
                         }
                     }
                 }
             }
         }
 
-        private string? activeCommit;
-        public string? ActiveCommit
+        private GitCommit? activeCommit;
+        public GitCommit? ActiveCommit
         {
             get { return activeCommit; }
             set
@@ -114,6 +115,11 @@ namespace GitEdit.ViewModels
             get { return new DelegateCommand(SelectDirectory); }
         }
 
+        public ICommand ChangeCommitCommand
+        {
+            get { return new DelegateCommand(ChangeCommit); }
+        }
+
 
         public MainViewModel()
         {
@@ -133,6 +139,11 @@ namespace GitEdit.ViewModels
             {
                 GitPath = a.SelectedPath;
             }
+        }
+
+        private void ChangeCommit()
+        {
+            var act = ActiveCommit;
         }
 
         private bool GitPathIsValid()
@@ -160,7 +171,10 @@ namespace GitEdit.ViewModels
 
                 foreach (var branch in repo.Branches)
                 {
-                    Branches.Add(branch.FriendlyName);
+                    if (!branch.IsRemote)
+                    {
+                        Branches.Add(branch.FriendlyName);
+                    }
                 }
 
                 RaisePropertyChangedEvent(nameof(Branches));
