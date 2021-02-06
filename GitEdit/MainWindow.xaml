@@ -136,6 +136,7 @@
                             Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
 
                         <materialDesign:TimePicker
+                            IsEnabled="{Binding ActiveCommitSelected}"
                             Grid.Column="1"
                             SelectedTime="{Binding ActiveCommitAuthorDate}"
                             Is24Hours="True"
@@ -156,6 +157,7 @@
                             Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
 
                         <materialDesign:TimePicker
+                            IsEnabled="{Binding ActiveCommitSelected}"
                             Grid.Column="1"
                             SelectedTime="{Binding ActiveCommitCommitterDate}"
                             Is24Hours="True"
@@ -163,7 +165,9 @@
                     </Grid>
 
                     <Button Grid.Row="3"
+                        IsEnabled="{Binding ActiveCommitSelected}"
                         Style="{StaticResource MaterialDesignFlatLightBgButton}"
+                        Command="{Binding SaveCommitCommand}"
                         ToolTip="MaterialDesignFloatingActionMiniLightButton">
                         Save Commit
                     </Button>

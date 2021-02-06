@@ -1,5 +1,6 @@
 ﻿using GitEdit.Models;
 using LibGit2Sharp;
+using LibGit2Sharp.Handlers;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
@@ -191,7 +192,41 @@ namespace GitEdit.ViewModels
 
         private void SaveCommit()
         {
+            using (var repo = gitRepo)
+            {
+                if (repo == null)
+                    throw new ArgumentNullException("Git repo could not be opened");
 
+                var branch = repo.Branches.First(x => x.FriendlyName == ActiveBranch);
+                var commit = branch.Commits.First(x => x.Id.Sha == ActiveCommit!.Id);
+                 
+                repo.Refs.RewriteHistory(new RewriteHistoryOptions
+                {
+                    OnError = OnError,
+                    OnSucceeding = OnSucceeding,
+                    CommitHeaderRewriter = (c) =>
+                    {
+                        return CommitRewriteInfo.From(
+                            c,
+                            new Signature(
+                                new Identity(c.Author.Name, c.Author.Email),
+                                ActiveCommitAuthorDate),
+                            new Signature(
+                                new Identity(c.Committer.Name, c.Committer.Email),
+                                ActiveCommitCommitterDate),
+                           c.Message
+                                );
+                    }
+                }, commit);
+            }
+        }
+
+        private void OnSucceeding()
+        {
+        }
+
+        private void OnError(Exception obj)
+        {
         }
 
         private bool GitPathIsValid()
