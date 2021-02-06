@@ -86,6 +86,17 @@ namespace GitEdit.ViewModels
             }
         }
 
+        private string? activeCommit;
+        public string? ActiveCommit
+        {
+            get { return activeCommit; }
+            set
+            {
+                activeCommit = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         private Repository? gitRepo
         {
             get

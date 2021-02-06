@@ -89,7 +89,7 @@
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Commits" />
 
-                    <ListBox Grid.Row="1" ItemsSource="{Binding Commits}" SelectedItem="{Binding ActiveBranch}">
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Commits}" SelectedItem="{Binding ActiveCommit}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
