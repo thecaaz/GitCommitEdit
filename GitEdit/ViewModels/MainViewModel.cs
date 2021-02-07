@@ -33,6 +33,39 @@ namespace GitEdit.ViewModels
             }
         }
 
+        #region Edit Properties
+        private string activeCommitMessage = "";
+        public string ActiveCommitMessage
+        {
+            get { return activeCommitMessage; }
+            set
+            {
+                activeCommitMessage = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        private DateTime activeCommitAuthorDate;
+        public DateTime ActiveCommitAuthorDate
+        {
+            get { return activeCommitAuthorDate; }
+            set
+            {
+                activeCommitAuthorDate = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        private DateTime activeCommitCommitterDate;
+        public DateTime ActiveCommitCommitterDate
+        {
+            get { return activeCommitCommitterDate; }
+            set
+            {
+                activeCommitCommitterDate = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        #endregion
+
         public ObservableCollection<string> Branches
         {
             get
@@ -95,7 +128,13 @@ namespace GitEdit.ViewModels
             {
                 activeCommit = value;
                 OnNotifyPropertyChanged();
+                RaisePropertyChangedEvent(nameof(ActiveCommitSelected));
             }
+        }
+
+        public bool ActiveCommitSelected
+        {
+            get { return ActiveCommit != null; }
         }
 
         private Repository? gitRepo
@@ -120,6 +159,10 @@ namespace GitEdit.ViewModels
             get { return new DelegateCommand(ChangeCommit); }
         }
 
+        public ICommand SaveCommitCommand
+        {
+            get { return new DelegateCommand(SaveCommit); }
+        }
 
         public MainViewModel()
         {
@@ -143,7 +186,14 @@ namespace GitEdit.ViewModels
 
         private void ChangeCommit()
         {
-            var act = ActiveCommit;
+            ActiveCommitAuthorDate = ActiveCommit!.Author.When.DateTime;
+            ActiveCommitCommitterDate = ActiveCommit!.Committer.When.DateTime;
+            ActiveCommitMessage = ActiveCommit!.Message;
+        }
+
+        private void SaveCommit()
+        {
+
         }
 
         private bool GitPathIsValid()
@@ -168,6 +218,7 @@ namespace GitEdit.ViewModels
             {
                 Branches.Clear();
                 Commits.Clear();
+                ActiveCommit = null;
 
                 foreach (var branch in repo.Branches)
                 {
@@ -176,8 +227,6 @@ namespace GitEdit.ViewModels
                         Branches.Add(branch.FriendlyName);
                     }
                 }
-
-                RaisePropertyChangedEvent(nameof(Branches));
             }
         }
 
