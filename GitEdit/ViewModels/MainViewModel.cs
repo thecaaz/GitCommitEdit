@@ -129,6 +129,7 @@ namespace GitEdit.ViewModels
                 activeCommit = value;
                 OnNotifyPropertyChanged();
                 RaisePropertyChangedEvent(nameof(ActiveCommitSelected));
+                ChangeCommit();
             }
         }
 
@@ -152,11 +153,6 @@ namespace GitEdit.ViewModels
         public ICommand SelectDirectoryCommand
         {
             get { return new DelegateCommand(SelectDirectory); }
-        }
-
-        public ICommand ChangeCommitCommand
-        {
-            get { return new DelegateCommand(ChangeCommit); }
         }
 
         public ICommand SaveCommitCommand
@@ -186,9 +182,11 @@ namespace GitEdit.ViewModels
 
         private void ChangeCommit()
         {
-            ActiveCommitAuthorDate = ActiveCommit!.Author.When.DateTime;
-            ActiveCommitCommitterDate = ActiveCommit!.Committer.When.DateTime;
-            ActiveCommitMessage = ActiveCommit!.Message;
+            if (ActiveCommit == null) return;
+
+            ActiveCommitAuthorDate = ActiveCommit.Author.When.DateTime;
+            ActiveCommitCommitterDate = ActiveCommit.Committer.When.DateTime;
+            ActiveCommitMessage = ActiveCommit.Message;
         }
 
         private void SaveCommit()

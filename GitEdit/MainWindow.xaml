@@ -90,7 +90,7 @@
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Commits" />
 
-                    <ListBox Grid.Row="1" ItemsSource="{Binding Commits}" SelectedItem="{Binding ActiveCommit}" MouseDoubleClick="CommitListView_MouseDoubleClick">
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Commits}" SelectedItem="{Binding ActiveCommit}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -108,7 +108,7 @@
                         <RowDefinition Height="50"></RowDefinition>
                         <RowDefinition Height="100"></RowDefinition>
                         <RowDefinition Height="100"></RowDefinition>
-                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="100"></RowDefinition>
                         <RowDefinition Height="50"></RowDefinition>
                         <RowDefinition Height="50"></RowDefinition>
                         <RowDefinition Height="50"></RowDefinition>
@@ -122,25 +122,49 @@
                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                         VerticalAlignment="Center" />
 
-                    <DatePicker 
-                        IsEnabled="{Binding ActiveCommitSelected}"
-                        SelectedDate="{Binding ActiveCommitAuthorDate}"
-                        Grid.Row="1"
-                        Width="140"
-                        materialDesign:HintAssist.Hint="A-Date"
-                        Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker 
+                            IsEnabled="{Binding ActiveCommitSelected}"
+                            SelectedDate="{Binding ActiveCommitAuthorDate}"
+                            Grid.Column="0"
+                            Width="140"
+                            materialDesign:HintAssist.Hint="A-Date"
+                            Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
 
-                    <DatePicker 
-                        IsEnabled="{Binding ActiveCommitSelected}"
-                        SelectedDate="{Binding ActiveCommitCommitterDate}"
-                        Grid.Row="2"
-                        Width="140"
-                        materialDesign:HintAssist.Hint="C-Date"
-                        Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+                        <materialDesign:TimePicker
+                            Grid.Column="1"
+                            SelectedTime="{Binding ActiveCommitAuthorDate}"
+                            Is24Hours="True"
+                            Width="100" />
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker 
+                            IsEnabled="{Binding ActiveCommitSelected}"
+                            SelectedDate="{Binding ActiveCommitCommitterDate}"
+                            Grid.Column="0"
+                            Width="140"
+                            materialDesign:HintAssist.Hint="C-Date"
+                            Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+
+                        <materialDesign:TimePicker
+                            Grid.Column="1"
+                            SelectedTime="{Binding ActiveCommitCommitterDate}"
+                            Is24Hours="True"
+                            Width="100" />
+                    </Grid>
 
                     <Button Grid.Row="3"
-                    Style="{StaticResource MaterialDesignFlatLightBgButton}"
-                    ToolTip="MaterialDesignFloatingActionMiniLightButton">
+                        Style="{StaticResource MaterialDesignFlatLightBgButton}"
+                        ToolTip="MaterialDesignFloatingActionMiniLightButton">
                         Save Commit
                     </Button>
 

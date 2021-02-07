@@ -30,10 +30,5 @@ namespace GitEdit
 
             mainViewModel = (MainViewModel)DataContext;
         }
-
-        private void CommitListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            mainViewModel.ChangeCommitCommand.Execute(sender);
-        }
     }
 }
