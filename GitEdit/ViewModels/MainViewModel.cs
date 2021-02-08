@@ -23,6 +23,10 @@ namespace GitEdit.ViewModels
                 gitPath = value;
                 OnNotifyPropertyChanged();
 
+                Branches.Clear();
+                Commits.Clear();
+                ActiveCommit = null;
+
                 if (GitPathIsValid())
                 {
                     ChangeGitDirectory();
@@ -53,6 +57,7 @@ namespace GitEdit.ViewModels
             {
                 activeCommitAuthorDate = value;
                 OnNotifyPropertyChanged();
+                ActiveCommitCommitterDate = activeCommitAuthorDate;
             }
         }
         private DateTime activeCommitCommitterDate;
@@ -276,10 +281,6 @@ namespace GitEdit.ViewModels
         {
             using (var repo = new Repository(GitPath))
             {
-                Branches.Clear();
-                Commits.Clear();
-                ActiveCommit = null;
-
                 foreach (var branch in repo.Branches)
                 {
                     if (!branch.IsRemote)
