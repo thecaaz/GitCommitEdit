@@ -200,20 +200,18 @@ namespace GitEdit.ViewModels
                 var branch = repo.Branches.First(x => x.FriendlyName == ActiveBranch);
                 var commit = branch.Commits.First(x => x.Id.Sha == ActiveCommit!.Id);
 
-                string? refName = null;
+                RemoveOriginalReferences(repo, branch);
 
-                foreach (var reference in repo.Refs)
+                var randomSecondAdd = new Random().Next(0, 59);
+
+                if (ActiveCommitAuthorDate.Second == 0)
                 {
-                    if (reference.CanonicalName.Contains("original")
-                        && reference.CanonicalName.Contains(branch.FriendlyName))
-                    {
-                        refName = reference.CanonicalName;
-                    }
+                    ActiveCommitAuthorDate = ActiveCommitAuthorDate.AddSeconds(randomSecondAdd);
                 }
-
-                if (refName != null)
-                    repo.Refs.Remove(refName);
-
+                if (ActiveCommitCommitterDate.Second == 0)
+                {
+                    ActiveCommitCommitterDate = ActiveCommitCommitterDate.AddSeconds(randomSecondAdd);
+                }
 
                 repo.Refs.RewriteHistory(new RewriteHistoryOptions
                 {
@@ -236,6 +234,23 @@ namespace GitEdit.ViewModels
 
                 ActiveBranch = ActiveBranch;
             }
+        }
+
+        private static void RemoveOriginalReferences(Repository? repo, Branch branch)
+        {
+            string? refName = null;
+
+            foreach (var reference in repo.Refs)
+            {
+                if (reference.CanonicalName.Contains("original")
+                    && reference.CanonicalName.Contains(branch.FriendlyName))
+                {
+                    refName = reference.CanonicalName;
+                }
+            }
+
+            if (refName != null)
+                repo.Refs.Remove(refName);
         }
 
         private void OnSucceeding()
