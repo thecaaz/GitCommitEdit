@@ -222,7 +222,7 @@ namespace GitEdit.ViewModels
                             new Signature(
                                 new Identity(c.Committer.Name, c.Committer.Email),
                                 ActiveCommitCommitterDate),
-                           c.Message
+                           ActiveCommitMessage
                                 );
                     }
                 }, commit);
