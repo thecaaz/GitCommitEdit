@@ -140,6 +140,7 @@
                             Grid.Column="1"
                             SelectedTime="{Binding ActiveCommitAuthorDate}"
                             Is24Hours="True"
+                            WithSeconds="True"
                             Width="100" />
                     </Grid>
 
@@ -161,6 +162,7 @@
                             Grid.Column="1"
                             SelectedTime="{Binding ActiveCommitCommitterDate}"
                             Is24Hours="True"
+                            WithSeconds="True"
                             Width="100" />
                     </Grid>
 
