@@ -161,11 +161,6 @@ namespace GitEdit.ViewModels
             get { return new DelegateCommand(SaveCommit); }
         }
 
-        public MainViewModel()
-        {
-            GitPath = @"D:\Users\oarth\Documents\GitHub\GitEdit";
-        }
-
         private void SelectDirectory()
         {
             var a = new VistaFolderBrowserDialog();
