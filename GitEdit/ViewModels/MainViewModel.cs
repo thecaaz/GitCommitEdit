@@ -199,7 +199,22 @@ namespace GitEdit.ViewModels
 
                 var branch = repo.Branches.First(x => x.FriendlyName == ActiveBranch);
                 var commit = branch.Commits.First(x => x.Id.Sha == ActiveCommit!.Id);
-                 
+
+                string? refName = null;
+
+                foreach (var reference in repo.Refs)
+                {
+                    if (reference.CanonicalName.Contains("original")
+                        && reference.CanonicalName.Contains(branch.FriendlyName))
+                    {
+                        refName = reference.CanonicalName;
+                    }
+                }
+
+                if (refName != null)
+                    repo.Refs.Remove(refName);
+
+
                 repo.Refs.RewriteHistory(new RewriteHistoryOptions
                 {
                     OnError = OnError,
@@ -218,6 +233,8 @@ namespace GitEdit.ViewModels
                                 );
                     }
                 }, commit);
+
+                ActiveBranch = ActiveBranch;
             }
         }
 
