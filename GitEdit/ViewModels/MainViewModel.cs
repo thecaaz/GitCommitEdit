@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GitEdit.ViewModels
@@ -192,47 +193,54 @@ namespace GitEdit.ViewModels
 
         private void SaveCommit()
         {
-            using (var repo = gitRepo)
+            try
             {
-                if (repo == null)
-                    throw new ArgumentNullException("Git repo could not be opened");
-
-                var branch = repo.Branches.First(x => x.FriendlyName == ActiveBranch);
-                var commit = branch.Commits.First(x => x.Id.Sha == ActiveCommit!.Id);
-
-                RemoveOriginalReferences(repo, branch);
-
-                var randomSecondAdd = new Random().Next(0, 59);
-
-                if (ActiveCommitAuthorDate.Second == 0)
+                using (var repo = gitRepo)
                 {
-                    ActiveCommitAuthorDate = ActiveCommitAuthorDate.AddSeconds(randomSecondAdd);
-                }
-                if (ActiveCommitCommitterDate.Second == 0)
-                {
-                    ActiveCommitCommitterDate = ActiveCommitCommitterDate.AddSeconds(randomSecondAdd);
-                }
+                    if (repo == null)
+                        throw new ArgumentNullException("Git repo could not be opened");
 
-                repo.Refs.RewriteHistory(new RewriteHistoryOptions
-                {
-                    OnError = OnError,
-                    OnSucceeding = OnSucceeding,
-                    CommitHeaderRewriter = (c) =>
+                    var branch = repo.Branches.First(x => x.FriendlyName == ActiveBranch);
+                    var commit = branch.Commits.First(x => x.Id.Sha == ActiveCommit!.Id);
+
+                    RemoveOriginalReferences(repo, branch);
+
+                    var randomSecondAdd = new Random().Next(0, 59);
+
+                    if (ActiveCommitAuthorDate.Second == 0)
                     {
-                        return CommitRewriteInfo.From(
-                            c,
-                            new Signature(
-                                new Identity(c.Author.Name, c.Author.Email),
-                                ActiveCommitAuthorDate),
-                            new Signature(
-                                new Identity(c.Committer.Name, c.Committer.Email),
-                                ActiveCommitCommitterDate),
-                           ActiveCommitMessage
-                                );
+                        ActiveCommitAuthorDate = ActiveCommitAuthorDate.AddSeconds(randomSecondAdd);
                     }
-                }, commit);
+                    if (ActiveCommitCommitterDate.Second == 0)
+                    {
+                        ActiveCommitCommitterDate = ActiveCommitCommitterDate.AddSeconds(randomSecondAdd);
+                    }
 
-                ActiveBranch = ActiveBranch;
+                    repo.Refs.RewriteHistory(new RewriteHistoryOptions
+                    {
+                        OnError = OnError,
+                        OnSucceeding = OnSucceeding,
+                        CommitHeaderRewriter = (c) =>
+                        {
+                            return CommitRewriteInfo.From(
+                                c,
+                                new Signature(
+                                    new Identity(c.Author.Name, c.Author.Email),
+                                    ActiveCommitAuthorDate),
+                                new Signature(
+                                    new Identity(c.Committer.Name, c.Committer.Email),
+                                    ActiveCommitCommitterDate),
+                               ActiveCommitMessage
+                                    );
+                        }
+                    }, commit);
+
+                    ActiveBranch = ActiveBranch;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
